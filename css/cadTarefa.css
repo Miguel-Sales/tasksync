@@ -1,75 +1,102 @@
-
+/* Fundo e estrutura principal */
 .body-cad-tarefa {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: rgb(138, 43, 226);
   margin: 0;
   padding: 20px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+  justify-content: flex-start;
 }
 
+/* Título */
 .titulo-cad-tarefa {
-  color: #333;
-  margin-top: 150px;
-  font-size: 24px;
+  color: #fff;
+  font-size: 32px;
+  margin: 60px 0 20px 0;
+  text-align: center;
 }
 
+/* Formulário */
 form {
-  background-color: #fff;
-  padding: 25px 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  
+  gap: 20px;
 }
 
-.input-tarefa-usuario,
-.input-setor,
-.text-descricao,
-.prioridade-tarefa {
-  padding: 10px;
+/* Rótulos */
+form label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+/* Inputs e Selects */
+form input[type="text"],
+form textarea,
+form select {
+  padding: 12px 14px;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 16px;
-  width: 100%;
-  box-sizing: border-box;
+  border-radius: 8px;
+  font-size: 15px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s;
 }
 
-.text-descricao {
+form input:focus,
+form textarea:focus,
+form select:focus {
+  outline: none;
+  border-color: rgb(138, 43, 226);
+}
+
+/* Textarea */
+form textarea {
   resize: vertical;
-  min-height: 80px;
-  max-height: 200px;
+  min-height: 100px;
+  max-height: 250px;
 }
 
-.prioridade-tarefa {
-  background-color: #fff;
-}
-
-.bot-criar-tarefa[type="submit"] {
-  padding: 12px;
+/* Botão de envio */
+form button[type="submit"] {
+  padding: 14px;
   background-color: rgb(138, 43, 226);
-  color: #fff;
+  color: white;
   font-size: 16px;
+  font-weight: bold;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 }
 
-.bot-criar-tarefa[type="submit"]:hover {
-  background-color: rgb(106, 33, 174);
+form button[type="submit"]:hover {
+  background-color: rgb(108, 32, 180);
 }
 
-.gerenciar-tarefas{
-  text-decoration: none;
-  background-color: #fff;
+/* Link para gerenciar tarefas */
+.gerenciar-tarefas {
+  display: inline-block;
+  text-align: center;
   margin-top: 25px;
-  padding: 10px;
+  padding: 10px 20px;
+  color: rgb(138, 43, 226);
+  background-color: #fff;
   border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.gerenciar-tarefas:hover {
+  background-color: #f0f0f0;
+  color: rgb(106, 33, 174);
 }

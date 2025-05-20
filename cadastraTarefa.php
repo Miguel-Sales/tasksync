@@ -1,56 +1,70 @@
+<?php
+include("conexao.php");
+
+// Busca usuários para popular o select
+$sql_usuarios = "SELECT id_usuario, nome_usuario FROM usuario";
+$result_usuarios = $conexao->query($sql_usuarios);
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title></title>
+  <title>Cadastrar Tarefa - TaskSync</title>
   <link rel="stylesheet" href="./css/cadTarefa.css">
 </head>
 <body class="body-cad-tarefa">
   <h2 class="titulo-cad-tarefa">Criar Nova Tarefa</h2>
+
   <form method="POST">
-    <input class="input-tarefa-usuario" type="number" name="usuario_id" placeholder="ID do Usuário" required>
-    <textarea class="text-descricao" name="descricao" placeholder="Descrição da Tarefa" required></textarea>
-    <input class="input-setor" class="" type="text" name="setor" placeholder="Setor da Empresa" required>
-    <select class="prioridade-tarefa" name="prioridade" required>
-      <option  class="prioridade"  value="Baixa">Baixa</option>
-      <option  class="prioridade"  value="Média">Média</option>
-      <option  class="prioridade"  value="Alta">Alta</option>
-    </select>
-    <button class="bot-criar-tarefa" type="submit">Criar Tarefa</button>
+    <label>Nome do Usuário:</label>
+    <select name="usuario_id" required>
+      <option value="">Selecione um usuário</option>
+      <?php while($usuario = $result_usuarios->fetch_assoc()): ?>
+        <option value="<?= $usuario['id_usuario'] ?>"><?= htmlspecialchars($usuario['nome_usuario']) ?></option>
+      <?php endwhile; ?>
+    </select><br>
+
+    <label>Descrição:</label>
+    <textarea name="descricao" required></textarea><br>
+
+    <label>Setor:</label>
+    <input type="text" name="setor" required><br>
+
+    <label>Prioridade:</label>
+    <select name="prioridade" required>
+        <option value="Baixa">Baixa</option>
+        <option value="Média">Média</option>
+        <option value="Alta">Alta</option>
+    </select><br>
+
+    <!-- Status fixado como "A Fazer" por regra de negócio -->
+    <input type="hidden" name="status" value="A Fazer">
+
+    <button type="submit">Cadastrar Tarefa</button>
   </form>
+
   <a href="gerenciaTarefa.php" class="gerenciar-tarefas">Gerenciar Tarefas</a>
-</body>
-</html>
-
-
 
   <?php
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conexao = mysqli_connect("localhost", "root", "", "tasksync");
+  if ($_SERVER["REQUEST_METHOD"] === "POST") {
+      $usuario_id = $_POST["usuario_id"];
+      $descricao = $_POST["descricao"];
+      $setor = $_POST["setor"];
+      $prioridade = $_POST["prioridade"];
+      $status = "A Fazer"; // Força regra de negócio
 
-    if (!$conexao) {
-      echo "<p class='erro'>Erro ao conectar ao banco de dados.</p>";
-    } else {
-      $usuario_id = $_POST['usuario_id'];
-      $descricao = $_POST['descricao'];
-      $setor = $_POST['setor'];
-      $prioridade = $_POST['prioridade'];
-      $data_cadastro = date("Y-m-d H:i:s");
+      $sql_tarefa = "INSERT INTO tarefas (usuario_id, descricao, setor, prioridade, data_cadastro, status) 
+                     VALUES (?, ?, ?, ?, NOW(), ?)";
+      $stmt = $conexao->prepare($sql_tarefa);
+      $stmt->bind_param("issss", $usuario_id, $descricao, $setor, $prioridade, $status);
 
-      $sql = "INSERT INTO tarefas (usuario_id, descricao, setor, prioridade, data_cadastro)
-              VALUES ('$usuario_id', '$descricao', '$setor', '$prioridade', '$data_cadastro')";
-
-
-      if (mysqli_query($conexao, $sql)) {
-        echo "<p class='sucesso'>Tarefa cadastrada com sucesso!</p>";
+      if ($stmt->execute()) {
+          echo "<p style='color: green;'> Tarefa cadastrada com sucesso!</p>";
       } else {
-        echo "<p class='erro'>Erro ao cadastrar tarefa.</p>";
+          echo "<p style='color: red;'> Erro ao cadastrar tarefa: " . $stmt->error . "</p>";
       }
-
-      mysqli_close($conexao);
-    }
   }
-
-  
   ?>
-
+</body>
+</html>
